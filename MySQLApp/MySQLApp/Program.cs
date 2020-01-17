@@ -17,7 +17,7 @@ namespace MySQLApp
         {
             while (true)
             {
-                Console.WriteLine("請選擇: (1) 登入  (2) 申請帳號\n");
+                Console.WriteLine("\n請選擇: (1) 登入  (2) 申請帳號\n");
                 Console.Write("您的選擇: ");
                 option = Console.ReadKey().KeyChar;
 
@@ -30,15 +30,30 @@ namespace MySQLApp
                         Console.Write("請輸入您的密碼: ");
                         password = Console.ReadLine();
                         Console.Write("\n");
+
+                        // 實體化連線物件
                         var signIn = new SignIn(id, password);
                         if (signIn.Pass)
                         {
-                            // 進行指令輸入 (顯示資料庫中所有表單)
+                            Console.WriteLine("登入成功");
+                            // 實體化命令物件
+                            var cmd = new Command(signIn.connection);
+                            // 選取表單
+                            Console.Write("請選擇您要顯示的表單: ");
+                            cmd.getTables();
+                            int idx = 1;
+                            cmd.tableName.ForEach(delegate(string name)
+                            {
+                                Console.Write("(" + idx + ")" + name + " ");
+                                idx += 1;
+                            });
+                            option = Console.ReadKey().KeyChar;
+                            signIn.connection.Close();
                             break;
                         }
                         else
                         {
-                            Console.WriteLine("請重新輸入您的帳號及密碼或申請帳號");
+                            Console.WriteLine("請重新輸入您的帳號及密碼或申請帳號\n");
                             break;
                         }
 

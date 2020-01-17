@@ -13,7 +13,8 @@ namespace MySQLApp
     {
         public string ID { get; set; }
         public string Password { get; set; }
-        public bool Pass = false;
+        public bool Pass = true;
+        public MySqlConnection connection;
 
         #region constructor
         public SignIn(string id, string password)
@@ -21,35 +22,19 @@ namespace MySQLApp
             this.ID = id;
             this.Password = password;
 
-
             string logString = "server=localhost;database=testdb;userid=" + this.ID + ";password=" + this.Password;
-            string cmdText;
-            MySqlConnection con = null;
-            MySqlDataReader reader = null;
-
             try
             {
-                con = new MySqlConnection(logString);
-                con.Open();
-                Console.WriteLine("登入成功");
-                Console.WriteLine("----------");
+                this.connection = new MySqlConnection(logString);
+                this.connection.Open();
             }
 
             catch (MySqlException err)
             {
                 this.Pass = false;
                 Console.WriteLine("登入失敗");
-                //Console.WriteLine(err);
+                Console.WriteLine(err);
             }
-
-            finally
-            {
-                if (con != null)
-                {
-                    con.Close();
-                }
-            }
-
         }
         #endregion
     }
